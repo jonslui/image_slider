@@ -10,29 +10,64 @@ html {
 }
 
 .sliderContainer {
-  margin-left: 10%;
-  margin-right: 10%;
-  display: flex;
-  text-align: center;
+  margin-left: 20%;
+  margin-right: 20%;
+
+  display: grid;
+  grid-template-columns: 60px auto 60px;
+  grid-template-rows: auto;
+  grid-template-areas: 
+    'image image image'
+    'last selectors next';
+
   justify-content: center;
 }
 
 .imageContainer {
-  max-width: 70%;
+  grid-area: image;
+
+  display: flex;
   justify-self: center;
 }
 
 .image {
   max-width: 100%;
-  height: auto;
+  max-height: 500px
+}
+
+.lastPhotoButton {
+  grid-area: last;
+  width: 60px;
+  height: 60px;
+  background-color: gray;
+  opacity: 0.2;
+  font-size: 50px;
+  text-align: center;
+}
+.lastPhotoButton:hover {
+  opacity: 0.4;
 }
 
 .nextPhotoButton {
-  max-width: 40px;
-  min-width: 40px;
+  grid-area: next;
+  width: 60px;
+  height: 60px;
   background-color: gray;
-  opacity: 0.1;
+  opacity: 0.2;
+  font-size: 50px;
+  text-align: center;
 }
 .nextPhotoButton:hover {
+  opacity: 0.4;
+}
+
+.selectorContainer {
+  grid-area: selectors;
+  align-self: stretch;
+  justify-content: center;
+  display: flex;
+  height: 60px;
+  background-color: gray;
+  font-size: 40px;
   opacity: 0.2;
 }

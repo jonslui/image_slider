@@ -1,10 +1,9 @@
+/* eslint-disable no-param-reassign */
 function populateSlider(image, container, index) {
-  const imageContainer = document.createElement('div');
-  imageContainer.setAttribute('class', 'imageContainer');
-
   const imageSRC = image[0];
   const imageALT = image[1];
   const element = document.createElement('img');
+
   element.setAttribute('class', 'image');
   element.setAttribute('alt', imageALT);
   element.id = index;
@@ -14,8 +13,7 @@ function populateSlider(image, container, index) {
     element.style.display = 'none';
   }
 
-  imageContainer.appendChild(element);
-  container.appendChild(imageContainer);
+  container.appendChild(element);
 }
 
 function nextImage(HTMLcollection) {
@@ -50,28 +48,65 @@ function lastImage(HTMLcollection) {
   }
 }
 
+function populateSelectorContainer(container, HTMLcollection, arrayLength) {
+  for (let i = 0; i < arrayLength; i += 1) {
+    const selector = document.createElement('a');
+    selector.setAttribute('class', 'selector');
+    selector.innerHTML = '◯';
+    container.appendChild(selector);
+
+    selector.addEventListener('click', () => {
+      // find index of currently displayed image
+      let j = 0;
+      while (HTMLcollection[j].style.display !== '') {
+        j += 1;
+      }
+
+      HTMLcollection[j].style.display = 'none';
+      HTMLcollection[i].style.display = '';
+    });
+  }
+}
+
 function createImageSlider(array, container) {
   const sliderContainer = document.createElement('div');
   sliderContainer.setAttribute('class', 'sliderContainer');
 
-  // buttons to move images
-  const leftButton = document.createElement('a');
-  leftButton.setAttribute('class', 'nextPhotoButton');
-  const rightButton = document.createElement('b');
-  rightButton.setAttribute('class', 'nextPhotoButton');
+  const imageContainer = document.createElement('div');
+  imageContainer.setAttribute('class', 'imageContainer');
 
-  sliderContainer.appendChild(leftButton);
-  array.forEach((image, index) => populateSlider(image, sliderContainer, index));
-  sliderContainer.appendChild(rightButton);
+  const leftButton = document.createElement('a');
+  leftButton.setAttribute('class', 'lastPhotoButton');
+  leftButton.innerHTML = '<';
+
+  const rightButton = document.createElement('a');
+  rightButton.setAttribute('class', 'nextPhotoButton');
+  rightButton.innerHTML = '>';
+
+  const selectorContainer = document.createElement('div');
+  selectorContainer.setAttribute('class', 'selectorContainer');
+
+  array.forEach((image, index) => populateSlider(image, imageContainer, index));
 
   // On button click: pass array of pointers to images to function and currently visible image
   const imageHTMLCollection = sliderContainer.getElementsByClassName('image');
+
   leftButton.addEventListener('click', () => {
     lastImage(imageHTMLCollection);
   });
   rightButton.addEventListener('click', () => {
     nextImage(imageHTMLCollection);
   });
+
+  populateSelectorContainer(selectorContainer, imageHTMLCollection, array.length);
+
+  sliderContainer.appendChild(imageContainer);
+  sliderContainer.appendChild(leftButton);
+  sliderContainer.appendChild(selectorContainer);
+  sliderContainer.appendChild(rightButton);
+
+  // Automatically flip to the next image every 5000 seconds
+  setInterval(() => nextImage(imageHTMLCollection), 5000);
 
   container.appendChild(sliderContainer);
 }
