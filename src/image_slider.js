@@ -71,20 +71,27 @@ function populateSelectorContainer(container, HTMLcollection, arrayLength) {
   for (let i = 0; i < arrayLength; i += 1) {
     const selector = document.createElement('a');
     selector.setAttribute('class', 'selector');
-    selector.innerHTML = '○';
-    container.appendChild(selector);
 
-    selector.addEventListener('click', () => {
-      // find index of currently displayed image
-      let j = 0;
-      while (HTMLcollection[j].style.display !== '') {
-        j += 1;
+    if (i === 0) {
+      selector.innerHTML = '●';
+    } else {
+      selector.innerHTML = '○';
+    }
+
+    container.appendChild(selector);
+  }
+}
+
+function addSelectorEventListeners(images, selectors) {
+  for (let i = 0; i < selectors.length; i += 1) {
+    selectors[i].addEventListener('click', () => {
+      for (let j = 0; j < selectors.length; j += 1) {
+        selectors[j].innerHTML = '○';
+        images[j].style.display = 'none';
       }
 
-      selector.innerHTML = '●';
-
-      HTMLcollection[j].style.display = 'none';
-      HTMLcollection[i].style.display = '';
+      selectors[i].innerHTML = '●';
+      images[i].style.display = '';
     });
   }
 }
@@ -115,6 +122,7 @@ function createImageSlider(array, container) {
   populateSelectorContainer(selectorContainer, imageHTMLCollection, array.length);
 
   const selectorHTMLcollection = selectorContainer.getElementsByClassName('selector');
+  addSelectorEventListeners(imageHTMLCollection, selectorHTMLcollection);
 
   leftButton.addEventListener('click', () => {
     lastImage(imageHTMLCollection, selectorHTMLcollection);
@@ -129,7 +137,7 @@ function createImageSlider(array, container) {
   sliderContainer.appendChild(rightButton);
 
   // Automatically flip to the next image every 5000 seconds
-  setInterval(() => nextImage(imageHTMLCollection), 5000);
+  setInterval(() => nextImage(imageHTMLCollection, selectorHTMLcollection), 5000);
 
   container.appendChild(sliderContainer);
 }
