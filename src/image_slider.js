@@ -96,7 +96,7 @@ function addSelectorEventListeners(images, selectors) {
   }
 }
 
-function createImageSlider(array, container) {
+function createImageSlider(array, container, autoSlide) {
   const sliderContainer = document.createElement('div');
   sliderContainer.setAttribute('class', 'sliderContainer');
 
@@ -137,7 +137,9 @@ function createImageSlider(array, container) {
   sliderContainer.appendChild(rightButton);
 
   // Automatically flip to the next image every 5000 seconds
-  setInterval(() => nextImage(imageHTMLCollection, selectorHTMLcollection), 5000);
+  if (autoSlide === true) {
+    setInterval(() => nextImage(imageHTMLCollection, selectorHTMLcollection), 5000);
+  }
 
   container.appendChild(sliderContainer);
 }

@@ -46,6 +46,7 @@ html {
 }
 .lastPhotoButton:hover {
   opacity: 0.4;
+  cursor: pointer;
 }
 
 .nextPhotoButton {
@@ -59,6 +60,7 @@ html {
 }
 .nextPhotoButton:hover {
   opacity: 0.4;
+  cursor: pointer;
 }
 
 .selectorContainer {
@@ -76,5 +78,5 @@ html {
 
 }
 .selector:hover{
-  
+  cursor: pointer;
 }
