@@ -16,35 +16,54 @@ function populateSlider(image, container, index) {
   container.appendChild(element);
 }
 
-function nextImage(HTMLcollection) {
-  let i = 0;
-
-  while (HTMLcollection[i].style.display !== '') {
-    i += 1;
-  }
-
-  HTMLcollection[i].style.display = 'none';
-
-  if (i === HTMLcollection.length - 1) {
-    HTMLcollection[0].style.display = '';
+// HTMLcollection is a collection of the clickable selector circles
+function updateSelectorDisplay(HTMLcollection, index, isDisplayed) {
+  if (isDisplayed === false) {
+    HTMLcollection[index].innerHTML = '○';
   } else {
-    HTMLcollection[i + 1].style.display = '';
+    HTMLcollection[index].innerHTML = '●';
   }
 }
 
-function lastImage(HTMLcollection) {
+// images and selectors are HTMLcollections
+function nextImage(images, selectors) {
   let i = 0;
+  updateSelectorDisplay(selectors, i, false);
 
-  while (HTMLcollection[i].style.display !== '') {
+  while (images[i].style.display !== '') {
     i += 1;
+    updateSelectorDisplay(selectors, i, false);
   }
 
-  HTMLcollection[i].style.display = 'none';
+  images[i].style.display = 'none';
+
+  if (i === images.length - 1) {
+    images[0].style.display = '';
+    updateSelectorDisplay(selectors, 0, true);
+  } else {
+    images[i + 1].style.display = '';
+    updateSelectorDisplay(selectors, i + 1, true);
+  }
+}
+
+// images and selectors are HTMLcollections
+function lastImage(images, selectors) {
+  let i = 0;
+  updateSelectorDisplay(selectors, i, false);
+
+  while (images[i].style.display !== '') {
+    i += 1;
+    updateSelectorDisplay(selectors, i, false);
+  }
+
+  images[i].style.display = 'none';
 
   if (i === 0) {
-    HTMLcollection[HTMLcollection.length - 1].style.display = '';
+    images[images.length - 1].style.display = '';
+    updateSelectorDisplay(selectors, selectors.length - 1, true);
   } else {
-    HTMLcollection[i - 1].style.display = '';
+    images[i - 1].style.display = '';
+    updateSelectorDisplay(selectors, i - 1, true);
   }
 }
 
@@ -52,7 +71,7 @@ function populateSelectorContainer(container, HTMLcollection, arrayLength) {
   for (let i = 0; i < arrayLength; i += 1) {
     const selector = document.createElement('a');
     selector.setAttribute('class', 'selector');
-    selector.innerHTML = '◯';
+    selector.innerHTML = '○';
     container.appendChild(selector);
 
     selector.addEventListener('click', () => {
@@ -61,6 +80,8 @@ function populateSelectorContainer(container, HTMLcollection, arrayLength) {
       while (HTMLcollection[j].style.display !== '') {
         j += 1;
       }
+
+      selector.innerHTML = '●';
 
       HTMLcollection[j].style.display = 'none';
       HTMLcollection[i].style.display = '';
@@ -91,14 +112,16 @@ function createImageSlider(array, container) {
   // On button click: pass array of pointers to images to function and currently visible image
   const imageHTMLCollection = sliderContainer.getElementsByClassName('image');
 
+  populateSelectorContainer(selectorContainer, imageHTMLCollection, array.length);
+
+  const selectorHTMLcollection = selectorContainer.getElementsByClassName('selector');
+
   leftButton.addEventListener('click', () => {
-    lastImage(imageHTMLCollection);
+    lastImage(imageHTMLCollection, selectorHTMLcollection);
   });
   rightButton.addEventListener('click', () => {
-    nextImage(imageHTMLCollection);
+    nextImage(imageHTMLCollection, selectorHTMLcollection);
   });
-
-  populateSelectorContainer(selectorContainer, imageHTMLCollection, array.length);
 
   sliderContainer.appendChild(imageContainer);
   sliderContainer.appendChild(leftButton);
